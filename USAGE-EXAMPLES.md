@@ -1,0 +1,38 @@
+#!/bin/bash
+# Quick test of installed binaries
+
+echo "=== WHISPER.CPP TEST ==="
+echo ""
+echo "Command:"
+echo "  ./whisper.cpp/bin/main -m ./whisper.cpp/model/ggml-base.en.bin -f audio.wav"
+echo ""
+echo "Example with sample audio:"
+echo "  curl -L https://raw.githubusercontent.com/ggerganov/whisper.cpp/master/samples/jfk.wav -o jfk.wav"
+echo "  ./whisper.cpp/bin/main -m ./whisper.cpp/model/ggml-base.en.bin -f jfk.wav"
+echo ""
+
+echo "=== LLAMA.CPP TEST ==="
+echo ""
+echo "Command:"
+echo "  ./llama.cpp/bin/llama-cli -m ./llama.cpp/model/your-model.gguf -p 'Hello'"
+echo ""
+echo "Or interactive mode:"
+echo "  ./llama.cpp/bin/llama-cli -m ./llama.cpp/model/your-model.gguf -i"
+echo ""
+
+echo "=== WHISPER.CPP SERVER ==="
+echo ""
+echo "Start server:"
+echo "  ./whisper.cpp/bin/server -m ./whisper.cpp/model/ggml-base.en.bin"
+echo ""
+echo "Then use in another terminal:"
+echo "  curl -X POST http://localhost:8000/inference -H 'Content-Type: application/json' -d '{\"audio\": \"...audio_data...\"}'"
+echo ""
+
+echo "=== LLAMA.CPP SERVER ==="
+echo ""
+echo "Start API server:"
+echo "  ./llama.cpp/bin/llama-server -m ./llama.cpp/model/your-model.gguf"
+echo ""
+echo "Then use API:"
+echo "  curl http://localhost:8000/v1/completions -H 'Content-Type: application/json' -d '{\"prompt\": \"Hello\", \"max_tokens\": 100}'"

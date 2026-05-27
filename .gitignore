@@ -1,0 +1,23 @@
+# Binaries
+llama.cpp/**
+whisper.cpp/**
+
+# macOS
+.DS_Store
+
+# Node modules (if using npm)
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

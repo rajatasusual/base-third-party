@@ -1,0 +1,25 @@
+#!/bin/bash
+# Post-merge hook: runs after git merge
+# Ensures binaries are up-to-date after merging changes
+
+set -e
+
+# Colors
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# Check if versions.conf changed (which would mean we need to rebuild)
+if git diff-tree -r --name-only HEAD@{1} HEAD | grep -q "versions.conf"; then
+    echo -e "${BLUE}versions.conf changed, updating binaries...${NC}"
+    
+    cd "$SCRIPT_DIR"
+    
+    if [ -f "setup.sh" ]; then
+        bash setup.sh || {
+            echo -e "${YELLOW}Warning: Binary update had issues. You may need to run ./setup.sh manually${NC}"
+        }
+    fi
+fi
