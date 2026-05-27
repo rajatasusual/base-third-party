@@ -190,17 +190,27 @@ setup_llama_from_download() {
         return 1
     fi
     
-    local LLAMA_ARCHIVE="llama-$OS_TYPE-$ARCH_TYPE.zip"
+    local LLAMA_ARCHIVE="llama-$OS_TYPE-$ARCH_TYPE.tar.gz"
     download_file "$LLAMA_URL" "$LLAMA_ARCHIVE"
     mkdir -p llama.cpp/bin
-    extract_archive "$LLAMA_ARCHIVE" llama.cpp/bin
+    extract_archive "$LLAMA_ARCHIVE" llama.cpp
     
-    # Flatten nested directory structure if present (build/bin/*)
-    if [ -d "llama.cpp/bin/build/bin" ]; then
-        echo -e "${BLUE}Organizing binaries...${NC}"
-        mv llama.cpp/bin/build/bin/* llama.cpp/bin/ 2>/dev/null || true
-        rm -rf llama.cpp/bin/build llama.cpp/bin/*.metal llama.cpp/bin/*.h 2>/dev/null || true
-    fi
+    # Move binaries from version-named folder (e.g., llama-0.x.y-linux-x86_64) to llama.cpp/bin
+    for versioned_dir in llama.cpp/llama-*/; do
+        if [ -d "$versioned_dir" ]; then
+            echo -e "${BLUE}Organizing binaries...${NC}"
+            # Move bin directory contents if present, otherwise move files directly
+            if [ -d "$versioned_dir/bin" ]; then
+                mv "$versioned_dir/bin"/* llama.cpp/bin/ 2>/dev/null || true
+            else
+                mv "$versioned_dir"/* llama.cpp/bin/ 2>/dev/null || true
+            fi
+            rm -rf "$versioned_dir"
+        fi
+    done
+    
+    # Clean up build artifacts and headers
+    rm -rf llama.cpp/bin/build llama.cpp/bin/*.metal llama.cpp/bin/*.h 2>/dev/null || true
     
     rm "$LLAMA_ARCHIVE"
     
